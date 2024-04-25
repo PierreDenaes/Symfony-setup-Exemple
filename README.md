@@ -36,10 +36,11 @@ Nous partirons sur une installation de base complète pour le dévellopement d'a
 
     [plus d'information ici...](https://symfony.com/doc/current/frontend/encore/installation.html)
 
-- Installation de bootstrap CSS & JS avec Webpack Encore
+- Installation de bootstrap CSS & JS ainsi que FontAwesome avec Webpack Encore
 
     ```bash
     npm install bootstrap --save-dev
+    npm install @fortawesome/fontawesome-free
     ```
 
     [plus d'information ici...](https://symfony.com/doc/current/frontend/encore/bootstrap.html)
@@ -66,8 +67,16 @@ Nous partirons sur une installation de base complète pour le dévellopement d'a
 - Création d'un composant d'affichage de messages et notifications utilisateur templates/components/message.html.twig
 
     ```code
-    
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    ````
 
+    > Nous inclurons ces éléments dans la base.html.twig
 
 ## Back-End
 
@@ -100,7 +109,7 @@ Nous partirons sur une installation de base complète pour le dévellopement d'a
     symfony console make:auth
     ```
 
-    > On oublie pas de régler nos redirections dans notre AppAuthenticator
+    > On oublie pas de régler nos redirections dans notre AppAuthenticator et de décommenter les access_controls dans le /config/packages/security.yaml
 
 - Mise en place du bundle de verification d'email pour inscription utilisateur et création de la form d'inscription
 
@@ -111,10 +120,23 @@ Nous partirons sur une installation de base complète pour le dévellopement d'a
     symfony console d:m:m
     ```
 
-- Nous utiliserons le bridge Google Mailer de Symfony pour configurer notre compte Gmail comme serveur de messagerie de développement.
+- Nous utiliserons le bridge Google Mailer de Symfony pour configurer notre compte Gmail comme serveur de messagerie de développement, un mot de passe d'application google sera a créer.
 
     ```bash
     composer require symfony/google-mailer
     ```
 
     > configuration a réaliser dans le .env.local
+
+- Nous allons maintenant installer le bundle d'administration easyAdmin 4
+
+    ```bash
+    composer require easycorp/easyadmin-bundle
+    ```
+
+- Création de l'admin dashboard
+
+    ```bash
+    symfony console make:admin:dashboard
+    ```
+
