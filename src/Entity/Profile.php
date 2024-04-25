@@ -56,7 +56,10 @@ class Profile
     #[ORM\JoinColumn(nullable: false)]
     private ?MagicalLevel $magicalLevel = null;
 
-   
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable(); // Ceci assigne la date et l'heure actuelles lors de la création de l'entité
+    }
 
     public function getId(): ?int
     {

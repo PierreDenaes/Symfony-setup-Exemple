@@ -41,6 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'idUser', cascade: ['persist', 'remove'])]
     private ?Profile $profile = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,5 +155,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->profile = $profile;
 
         return $this;
+    }
+    public function __toString(): string
+    {
+        return $this->email;
     }
 }
