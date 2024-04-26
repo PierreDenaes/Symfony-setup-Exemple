@@ -1,5 +1,7 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
+    router:
+        default_uri: '%env(APP_BASE_URL)%' # default base URL for generating URLs in tests (e.g. functional tests)
     secret: '%env(APP_SECRET)%'
     #csrf_protection: true
 
