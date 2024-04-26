@@ -48,7 +48,7 @@ class Profile
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    #[ORM\OneToOne(inversedBy: 'profile', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'profile')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $idUser = null;
 
@@ -210,7 +210,7 @@ class Profile
     }
     public function __toString()
     {
-        return $this->birthday.' '.$this->nom.' '.$this->prenom.' '.$this->pseudo.' '.$this->biographie.' '.$this->createdAt.' '.$this->isActive.' '.$this->idUser.' '.$this->magicalLevel;
+        return $this->nom.' '.$this->prenom.' '.$this->pseudo.' '.$this->biographie.' '.$this->isActive.' '.$this->idUser.' '.$this->magicalLevel;
     }
 
 }
