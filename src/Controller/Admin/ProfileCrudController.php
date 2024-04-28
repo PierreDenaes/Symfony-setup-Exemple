@@ -2,17 +2,14 @@
 
 namespace App\Controller\Admin;
 
-use DateTime;
 use App\Entity\Profile;
 use App\Controller\VichImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -31,12 +28,13 @@ class ProfileCrudController extends AbstractCrudController
             TextField::new('prenom'),
             TextField::new('pseudo'),
             DateField::new('birthday'),
-            DateTimeField::new('createdAt')
+            DateTimeField::new('createdAt', 'Créé le')
             ->setFormTypeOptions([
                 'disabled' => true, // Désactive le champ dans le formulaire
             ])
             ->hideOnForm(),
-            TextareaField::new('biographie'),
+            TextareaField::new('biographie')
+            ->hideOnIndex(),
             AssociationField::new('idUser'),
             AssociationField::new('magicalLevel'),
             BooleanField::new('isActive'),

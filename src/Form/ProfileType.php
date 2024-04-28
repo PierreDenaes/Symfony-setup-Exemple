@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Profile;
 use App\Entity\MagicalLevel;
 use Symfony\Component\Form\AbstractType;

@@ -93,6 +93,6 @@ class MagicalLevel
     }
     public function __toString(): string
     {
-        return $this->name.' - '.$this->description;
+        return $this->name;
     }
 }
