@@ -3,14 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use EasyCorp\Bundle\EasyAdminBundle\Config\{Action, Actions, Crud, KeyValueStore};
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
-use EasyCorp\Bundle\EasyAdminBundle\Field\{BooleanField, IdField, EmailField, TextField};
-use Symfony\Component\Form\Extension\Core\Type\{PasswordType, RepeatedType};
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use Symfony\Component\Form\{FormBuilderInterface, FormEvents};
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\Extension\Core\Type\{PasswordType, RepeatedType};
+use EasyCorp\Bundle\EasyAdminBundle\Config\{Action, Actions, Crud, KeyValueStore};
+use EasyCorp\Bundle\EasyAdminBundle\Field\{BooleanField, IdField, EmailField, TextField};
 
 class UserCrudController extends AbstractCrudController
 {
@@ -31,11 +32,16 @@ class UserCrudController extends AbstractCrudController
     }
     public function configureFields(string $pageName): iterable
     {
+        $roles = ['ROLE_ADMIN', 'ROLE_USER'];
         $fields = [
             IdField::new('id')->hideOnForm(),
             EmailField::new('email'),
+            ChoiceField::new('roles')
+            ->setChoices(array_combine($roles, $roles))
+            ->allowMultipleChoices()
+            ->renderExpanded()
+            ->renderAsBadges(),
         ];
-
         $password = TextField::new('password')
             ->setFormType(RepeatedType::class)
             ->setFormTypeOptions([
