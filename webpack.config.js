@@ -57,6 +57,8 @@ Encore
     // enables Sass/SCSS support
     .enableSassLoader()
 
+    // enable Stimulus bridge (used in assets/bootstrap.js)
+    .enableStimulusBridge('./assets/controllers.json')
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
