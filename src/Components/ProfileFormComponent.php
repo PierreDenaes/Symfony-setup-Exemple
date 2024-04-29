@@ -82,7 +82,7 @@ class ProfileFormComponent
 
                 // Renvoyez le HTML pour le Turbo Stream
                 return new Response(
-                    $this->twig->render('components/profileDisplayComponent.html.twig', [
+                    $this->twig->render('components/profileDisplayComponent.stream.html.twig', [
                         'profile' => $this->profile
                     ]),
                     200,

@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Profile;
 use App\Form\ProfileType;
+use App\Components\ProfileFormComponent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
@@ -47,4 +49,14 @@ class ProfileController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    #[Route('/profile/edit-form', name: 'profile_edit')]
+public function editForm(ComponentFactory $componentFactory): Response
+{
+    $profileFormComponent = $componentFactory->create(ProfileFormComponent::class);
+
+    // No need to pass 'form' because the component handles it
+    return $this->render('profile/profile_edit.html.twig', [
+        'component' => $profileFormComponent,
+    ]);
+}
 }
