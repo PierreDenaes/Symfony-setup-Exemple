@@ -212,5 +212,10 @@ class Profile
     {
         return $this->nom.' '.$this->prenom.' '.$this->pseudo.' '.$this->biographie.' '.$this->isActive.' '.$this->idUser.' '.$this->magicalLevel;
     }
+    public function __sleep()
+    {
+        // Retourner ici les propriétés à sérialiser
+        return ['id', 'avatarName', 'updatedAt'];
+    }
 
 }
