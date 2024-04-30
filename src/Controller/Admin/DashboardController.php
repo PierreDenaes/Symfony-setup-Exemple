@@ -3,9 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Entity\Unite;
 use App\Entity\Effect;
+use App\Entity\Rarete;
 use App\Entity\Profile;
 use App\Entity\MagicalLevel;
+use App\Entity\TypeIngredient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -54,6 +57,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Le coin des Magiciens');
         yield MenuItem::linkToCrud('Niveaux de Magie', 'fa-solid fa-poo-storm', MagicalLevel::class);
         yield MenuItem::linkToCrud('Les Effets Magiques', 'fa-solid fa-magic', Effect::class);
+        yield MenuItem::linkToCrud('Les types d\'ingrédients', 'fa-solid fa-flask', TypeIngredient::class);
+        yield MenuItem::linkToCrud('Rareté des ingrédients', 'fa-solid fa-gem', Rarete::class);
+        yield MenuItem::linkToCrud('Unités de mesure', 'fa-solid fa-ruler', Unite::class);
         yield MenuItem::section('Retour au site');
         yield MenuItem::linkToRoute('Accueil Site','fa-solid fa-house','app_home');
         yield MenuItem::linkToRoute('Vue Profil','fa-solid fa-eye','app_profile');

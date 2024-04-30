@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EffectRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,6 +24,17 @@ class Effect
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $duree = null;
+
+    /**
+     * @var Collection<int, PotionEffect>
+     */
+    #[ORM\OneToMany(targetEntity: PotionEffect::class, mappedBy: 'effect')]
+    private Collection $potionEffects;
+
+    public function __construct()
+    {
+        $this->potionEffects = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +73,36 @@ class Effect
     public function setDuree(\DateTimeInterface $duree): static
     {
         $this->duree = $duree;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PotionEffect>
+     */
+    public function getPotionEffects(): Collection
+    {
+        return $this->potionEffects;
+    }
+
+    public function addPotionEffect(PotionEffect $potionEffect): static
+    {
+        if (!$this->potionEffects->contains($potionEffect)) {
+            $this->potionEffects->add($potionEffect);
+            $potionEffect->setEffect($this);
+        }
+
+        return $this;
+    }
+
+    public function removePotionEffect(PotionEffect $potionEffect): static
+    {
+        if ($this->potionEffects->removeElement($potionEffect)) {
+            // set the owning side to null (unless already changed)
+            if ($potionEffect->getEffect() === $this) {
+                $potionEffect->setEffect(null);
+            }
+        }
 
         return $this;
     }
