@@ -28,9 +28,16 @@ class MagicalLevel
     #[ORM\OneToMany(targetEntity: Profile::class, mappedBy: 'magicalLevel', orphanRemoval: true)]
     private Collection $profiles;
 
+    /**
+     * @var Collection<int, Potion>
+     */
+    #[ORM\OneToMany(targetEntity: Potion::class, mappedBy: 'minMagicalLevel')]
+    private Collection $potions;
+
     public function __construct()
     {
         $this->profiles = new ArrayCollection();
+        $this->potions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,5 +101,35 @@ class MagicalLevel
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection<int, Potion>
+     */
+    public function getPotions(): Collection
+    {
+        return $this->potions;
+    }
+
+    public function addPotion(Potion $potion): static
+    {
+        if (!$this->potions->contains($potion)) {
+            $this->potions->add($potion);
+            $potion->setMinMagicalLevel($this);
+        }
+
+        return $this;
+    }
+
+    public function removePotion(Potion $potion): static
+    {
+        if ($this->potions->removeElement($potion)) {
+            // set the owning side to null (unless already changed)
+            if ($potion->getMinMagicalLevel() === $this) {
+                $potion->setMinMagicalLevel(null);
+            }
+        }
+
+        return $this;
     }
 }

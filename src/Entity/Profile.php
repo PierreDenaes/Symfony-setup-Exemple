@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -56,9 +58,16 @@ class Profile
     #[ORM\JoinColumn(nullable: false)]
     private ?MagicalLevel $magicalLevel = null;
 
+    /**
+     * @var Collection<int, Potion>
+     */
+    #[ORM\OneToMany(targetEntity: Potion::class, mappedBy: 'idProfil')]
+    private Collection $potions;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable(); // Ceci assigne la date et l'heure actuelles lors de la création de l'entité
+        $this->potions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,6 +225,36 @@ class Profile
     {
         // Retourner ici les propriétés à sérialiser
         return ['id', 'avatarName', 'updatedAt'];
+    }
+
+    /**
+     * @return Collection<int, Potion>
+     */
+    public function getPotions(): Collection
+    {
+        return $this->potions;
+    }
+
+    public function addPotion(Potion $potion): static
+    {
+        if (!$this->potions->contains($potion)) {
+            $this->potions->add($potion);
+            $potion->setIdProfil($this);
+        }
+
+        return $this;
+    }
+
+    public function removePotion(Potion $potion): static
+    {
+        if ($this->potions->removeElement($potion)) {
+            // set the owning side to null (unless already changed)
+            if ($potion->getIdProfil() === $this) {
+                $potion->setIdProfil(null);
+            }
+        }
+
+        return $this;
     }
 
 }
