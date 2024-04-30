@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Entity\Effect;
 use App\Entity\Profile;
 use App\Entity\MagicalLevel;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,7 +51,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Retour DashBoard', 'fa-solid fa-house-laptop');
         yield MenuItem::linkToCrud('Utilisateur', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Profile', 'fa-solid fa-address-card', Profile::class);
+        yield MenuItem::section('Le coin des Magiciens');
         yield MenuItem::linkToCrud('Niveaux de Magie', 'fa-solid fa-poo-storm', MagicalLevel::class);
+        yield MenuItem::linkToCrud('Les Effets Magiques', 'fa-solid fa-magic', Effect::class);
         yield MenuItem::section('Retour au site');
         yield MenuItem::linkToRoute('Accueil Site','fa-solid fa-house','app_home');
         yield MenuItem::linkToRoute('Vue Profil','fa-solid fa-eye','app_profile');
