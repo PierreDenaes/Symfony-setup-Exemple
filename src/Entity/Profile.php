@@ -219,7 +219,7 @@ class Profile
     }
     public function __toString()
     {
-        return $this->nom.' '.$this->prenom.' '.$this->pseudo.' '.$this->biographie.' '.$this->isActive.' '.$this->idUser.' '.$this->magicalLevel;
+        return $this->nom.' '.$this->prenom;
     }
     public function __sleep()
     {

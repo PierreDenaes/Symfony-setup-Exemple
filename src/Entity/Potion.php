@@ -39,19 +39,19 @@ class Potion
     /**
      * @var Collection<int, PotionIngredient>
      */
-    #[ORM\OneToMany(targetEntity: PotionIngredient::class, mappedBy: 'potion')]
+    #[ORM\OneToMany(targetEntity: PotionIngredient::class, mappedBy: 'potion',cascade: ['persist', 'remove'])]
     private Collection $potionIngredients;
 
     /**
      * @var Collection<int, EtapePreparation>
      */
-    #[ORM\OneToMany(targetEntity: EtapePreparation::class, mappedBy: 'potion')]
+    #[ORM\OneToMany(targetEntity: EtapePreparation::class, mappedBy: 'potion',cascade: ['persist', 'remove'])]
     private Collection $etapePreparations;
 
     /**
      * @var Collection<int, PotionEffect>
      */
-    #[ORM\OneToMany(targetEntity: PotionEffect::class, mappedBy: 'potion')]
+    #[ORM\OneToMany(targetEntity: PotionEffect::class, mappedBy: 'potion',cascade: ['persist', 'remove'])]
     private Collection $potionEffects;
 
     public function __construct()
@@ -59,6 +59,8 @@ class Potion
         $this->potionIngredients = new ArrayCollection();
         $this->etapePreparations = new ArrayCollection();
         $this->potionEffects = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->isActive = true;
     }
 
     public function getId(): ?int
