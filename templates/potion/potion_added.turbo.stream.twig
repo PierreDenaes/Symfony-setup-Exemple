@@ -1,0 +1,11 @@
+{# potion/potion_added.turbo.stream.twig #}
+
+<turbo-stream action="append" target="potion_list">
+    <template>
+        <div id="potion-{{ potion.id }}">
+            <h3>{{ potion.name }}</h3>
+            <p>{{ potion.description }}</p>
+            <!-- Autres détails de la potion -->
+        </div>
+    </template>
+</turbo-stream>

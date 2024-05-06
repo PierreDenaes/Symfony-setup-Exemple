@@ -2,8 +2,8 @@
 
 namespace App\Components;
 
-use App\Entity\Profile;
-use App\Form\ProfileType;
+use App\Entity\Potion;
+use App\Form\PotionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +17,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment as TwigEnvironment;
 
-#[AsLiveComponent('ProfileFormComponent')]
-class ProfileFormComponent
+#[AsLiveComponent('PotionFormComponent')]
+class PotionFormComponent
 {
     use DefaultActionTrait, ComponentWithFormTrait;
 
@@ -28,40 +28,46 @@ class ProfileFormComponent
     private RequestStack $requestStack;
     private TwigEnvironment $twig;
 
-    #[LiveProp(writable: ['nom', 'prenom', 'pseudo', 'biographie'], fieldName: 'profileData')]
-    public Profile $profile;
+    #[LiveProp(writable: ['nom', 'description', 'minMagicalLevel', 'isActive'], fieldName: 'potionData')]
+    public Potion $potion;
 
-    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, TokenStorageInterface $tokenStorage, RequestStack $requestStack,TwigEnvironment $twig )
+    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory, TokenStorageInterface $tokenStorage, RequestStack $requestStack, TwigEnvironment $twig)
     {
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
         $this->tokenStorage = $tokenStorage;
         $this->requestStack = $requestStack; 
         $this->twig = $twig;
-
-        $token = $this->tokenStorage->getToken();
-        if (null !== $token && $token->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
-            $user = $token->getUser();
-            $this->profile = $user->getProfile() ?? new Profile();
-        } else {
-            throw new \LogicException('No user is authenticated.');
-        }
+        // Logique pour initialiser l'objet $potion
+        $this->initializePotion();
     }
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->formFactory->create(ProfileType::class, $this->profile);
+        return $this->formFactory->create(PotionType::class, $this->potion);
     }
+    private function initializePotion()
+    {
+        $token = $this->tokenStorage->getToken();
+        if ($token && $token->getUser() && method_exists($token->getUser(), 'getProfile')) {
+            $userProfile = $token->getUser()->getProfile();
+            $this->potion = new Potion();
+            $this->potion->setIdProfil($userProfile);
+            $this->form = $this->formFactory->create(PotionType::class, $this->potion);
+        } else {
+            throw new \LogicException('User must be logged in and have a profile to create a potion.');
+        }
+    }
+    
 
     #[LiveAction]
-    public function saveProfile()
+    public function savePotion()
     {
-        // Créez le formulaire avec le ProfileType
-        $form = $this->formFactory->create(ProfileType::class, $this->profile);
+        $form = $this->formFactory->create(PotionType::class, $this->potion);
         $form->handleRequest($this->requestStack->getCurrentRequest());
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($this->profile);
+            $this->entityManager->persist($this->potion);
             $this->entityManager->flush();
 
             // Si la requête est une requête Turbo, renvoyez une réponse Turbo Stream
@@ -71,8 +77,8 @@ class ProfileFormComponent
 
                 // Renvoyez le HTML pour le Turbo Stream
                 return new Response(
-                    $this->twig->render('components/ProfileDisplayComponent.stream.html.twig', [
-                        'profile' => $this->profile
+                    $this->twig->render('components/PotionDisplayComponent.stream.html.twig', [
+                        'potion' => $this->potion
                     ]),
                     200,
                     ['Content-Type' => 'text/vnd.turbo-stream.html']
@@ -83,17 +89,9 @@ class ProfileFormComponent
             return new Response('Le profil a été mis à jour');
         }
 
-        // Si le formulaire n'est pas valide, retournez le formulaire avec les erreurs
-        if ($form->isSubmitted() && !$form->isValid()) {
-            // Vous pouvez retourner une vue du formulaire avec des erreurs
-            // ou traiter les erreurs d'une autre manière
-        }
-
-        // Si le formulaire n'a pas été soumis, retournez une vue du formulaire vide
-        return $this->twig->render('components/ProfileFormComponent.html.twig', [
+        // Retourner le formulaire avec ou sans erreurs
+        return $this->twig->render('components/PotionFormComponent.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-    
-
 }

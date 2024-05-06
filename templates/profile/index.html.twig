@@ -11,12 +11,16 @@
 			<nav id="sidebar" class="col-3">
 				<div class="p-4">
 					<div class="mb-5">
-						<div class="card" id="profile-display">
-							{{ component('ProfileDisplayComponent') }}
-						</div>
+						<turbo-frame id="profile-display">
+							{{ component('ProfileDisplayComponent') }} 
+						</turbo-frame>
+
 					</div>
 					<div>
 						<button id="editProfileButton" class="btn btn-primary">Éditer le profil</button>
+					</div>
+					<div>
+						<button id="createPotionButton" class="btn btn-primary">Créer Potion</button>
 					</div>
 				</div>
 			</nav>
@@ -39,6 +43,41 @@ fetch('{{ path('profile_edit') }}').then(response => response.text()).then(html 
 document.getElementById('dynamicContent').innerHTML = html;
 }).catch(error => console.error('Error loading the form: ', error));
 });
+document.getElementById('createPotionButton').addEventListener('click', function () {
+fetch('{{ path('profile_create_potion') }}').then(response => response.text()).then(html => {
+document.getElementById('dynamicContent').innerHTML = html;
+initializeFormListeners();  // Reinitialize listeners
+}).catch(error => console.error('Error loading the form: ', error));
+});
+  function initializeFormListeners() {
+    document.querySelectorAll('.add_item_link').forEach(button => {
+        button.removeEventListener('click', addItem);
+        button.addEventListener('click', addItem);
+    });
+
+    document.querySelectorAll('.remove-item').forEach(button => {
+        button.removeEventListener('click', removeItem);
+        button.addEventListener('click', removeItem);
+    });
+}
+
+function addItem(event) {
+    const collectionHolderClass = event.target.getAttribute('data-collection-holder-class');
+    const collectionHolder = document.getElementById(collectionHolderClass);
+    const item = document.createElement('li');
+    const prototype = collectionHolder.getAttribute('data-prototype');
+    const newItemHtml = prototype.replace(/__name__/g, collectionHolder.children.length);
+    item.innerHTML = newItemHtml + '<button type="button" class="remove-item btn btn-danger">Supprimer</button>';
+    collectionHolder.appendChild(item);
+    initializeFormListeners();  // Reinitialize listeners
+}
+
+function removeItem(event) {
+    event.target.parentNode.remove();
+}
+
+// Call this on AJAX success or after dynamically loading the component
+initializeFormListeners();
 		</script>
 
 	{% endif %}
